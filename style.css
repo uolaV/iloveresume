@@ -713,7 +713,7 @@ textarea.fl-input:not(:placeholder-shown) ~ .fl-label {
   display: none;
   position: fixed;
   bottom: 1.5rem;
-  right: 1.5rem;
+  left: 1.5rem;
   z-index: 50;
   background: var(--accent);
   color: #fff;
