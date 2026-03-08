@@ -889,7 +889,7 @@ const LANGS = [
   { code: 'en', label: 'English',  flag: flagImg('gb','GB') },
   { code: 'de', label: 'Deutsch',  flag: flagImg('de','DE') },
   { code: 'es', label: 'Español',  flag: flagImg('es','ES') },
-  { code: 'pt', label: 'Português', flag: flagImg('br','BR') },
+  { code: 'pt', label: 'Português', flag: flagImg('pt','PT') },
   { code: 'it', label: 'Italiano', flag: flagImg('it','IT') },
   { code: 'nl', label: 'Nederlands', flag: flagImg('nl','NL') },
   { code: 'pl', label: 'Polski', flag: flagImg('pl','PL') },
@@ -1009,7 +1009,7 @@ const RTL_LANGS = ['ar'];
 function updateLangUI() {
   const l = LANGS.find(x => x.code === lang) || LANGS[0];
   $('lang-flag').innerHTML = l.flag;
-  $('lang-label').textContent = l.label;
+  $('lang-label').textContent = l.code.toUpperCase();
   document.documentElement.dir = RTL_LANGS.includes(lang) ? 'rtl' : 'ltr';
 }
 
