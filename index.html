@@ -63,11 +63,11 @@
       <span class="text-xl font-bold tracking-tight"><span class="text-[var(--accent)]">i</span>loveresume</span>
     </a>
 
-    <!-- Center: Lang + Country -->
-    <div class="flex items-center gap-2 flex-1 justify-center">
+    <!-- Lang -->
+    <div class="flex items-center gap-2">
       <button id="btn-lang" class="pill-btn flex items-center gap-1.5" title="Langue">
         <span id="lang-flag" class="text-base">🌐</span>
-        <span id="lang-label" class="hidden md:inline text-sm font-medium">FR</span>
+        <span id="lang-label" class="hidden text-sm font-medium">FR</span>
       </button>
     </div>
 
@@ -568,7 +568,13 @@
   <div class="mobile-preview-box">
     <div class="mobile-preview-header">
       <span class="text-sm font-semibold" data-t="preview_cv">Voir mon CV</span>
-      <button onclick="closeMobilePreview()" class="modal-close" aria-label="Fermer">×</button>
+      <div class="flex items-center gap-2">
+        <button onclick="downloadPDF()" class="pdf-btn flex items-center gap-2 text-sm" aria-label="Télécharger le PDF">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span class="font-semibold" data-t="download">Télécharger PDF</span>
+        </button>
+        <button onclick="closeMobilePreview()" class="modal-close" aria-label="Fermer">×</button>
+      </div>
     </div>
     <div class="mobile-preview-body">
       <div id="mobile-cv-container" class="mobile-cv-container"></div>
