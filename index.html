@@ -12,13 +12,9 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- html2pdf.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-  <!-- pako (gzip for share-by-link) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+  <!-- Heavy libs loaded on demand via loadScript() in app.js -->
 
   <link rel="stylesheet" href="style.css" />
 
@@ -36,6 +32,12 @@
   </script>
 </head>
 <body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-200" style="font-family: Inter, sans-serif;">
+
+<!-- Skip to content (Accessibility) -->
+<a href="#main-content" class="skip-to-content">Skip to content</a>
+
+<!-- Live region for screen reader announcements -->
+<div id="sr-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
 <!-- ═══════════════════════════════════════════════════ HEADER ═══ -->
 <header class="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
@@ -57,6 +59,10 @@
     <!-- Right actions -->
     <div class="flex items-center gap-2 shrink-0">
       <span id="save-indicator" class="save-indicator" data-t="saved_indicator">Sauvegardé</span>
+      <button id="btn-ats" class="pill-btn" title="ATS Score" aria-label="ATS Score Checker">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <span class="hidden sm:inline text-sm" data-t="ats_checker">Score ATS</span>
+      </button>
       <button id="btn-history" class="pill-btn" title="Historique" aria-label="Historique des CV">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <span class="hidden sm:inline text-sm" data-t="history">Historique</span>
@@ -78,7 +84,7 @@
 </header>
 
 <!-- ═══════════════════════════════════════════════ MAIN LAYOUT ═══ -->
-<main class="max-w-screen-2xl mx-auto px-4 py-6 grid grid-cols-1 xl:grid-cols-[480px_1fr] gap-6 items-start">
+<main id="main-content" class="max-w-screen-2xl mx-auto px-4 py-6 grid grid-cols-1 xl:grid-cols-[480px_1fr] gap-6 items-start" role="main">
 
   <!-- ─────────────────── LEFT: Form ─────────────────── -->
   <aside class="flex flex-col gap-0">
@@ -127,6 +133,7 @@
           <span data-t="import_json">Importer un CV</span>
           <input type="file" id="json-file-input" accept=".json" class="hidden" />
         </label>
+
       </div>
     </div>
 
@@ -305,6 +312,31 @@
               <label class="fl-label" for="p-interests" data-t="interests_placeholder">Voyage, Photo, Sport… (séparés par virgule)</label>
             </div>
           </div>
+          <!-- Publications -->
+          <div class="mb-4">
+            <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2" data-t="publications">Publications</h4>
+            <div id="pub-list" class="flex flex-col gap-4"></div>
+            <button id="btn-add-pub" class="add-btn mt-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              <span data-t="add_publication">Ajouter une publication</span>
+            </button>
+          </div>
+          <!-- References -->
+          <div class="mb-4">
+            <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2" data-t="references">Références</h4>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs text-gray-500 dark:text-gray-400" data-t="references_available">Références disponibles sur demande</span>
+              <label class="tog">
+                <input type="checkbox" id="tog-references" checked />
+                <span class="tog-track"></span>
+              </label>
+            </div>
+            <div id="ref-list" class="flex flex-col gap-4"></div>
+            <button id="btn-add-ref" class="add-btn mt-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              <span data-t="add_reference">Ajouter une référence</span>
+            </button>
+          </div>
           <!-- Custom Sections -->
           <div>
             <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 mb-2" data-t="custom_section">Section personnalisée</h4>
@@ -332,6 +364,14 @@
               <button class="tpl-pill" data-tpl="classic" data-t="tpl_classic">Classic</button>
               <button class="tpl-pill" data-tpl="bold" data-t="tpl_bold">Bold</button>
               <button class="tpl-pill" data-tpl="compact" data-t="tpl_compact">Compact</button>
+              <button class="tpl-pill" data-tpl="executive" data-t="tpl_executive">Exécutif</button>
+              <button class="tpl-pill" data-tpl="creative" data-t="tpl_creative">Créatif</button>
+              <button class="tpl-pill" data-tpl="technical" data-t="tpl_technical">Technique</button>
+              <button class="tpl-pill" data-tpl="minimal" data-t="tpl_minimal">Minimal</button>
+              <button class="tpl-pill" data-tpl="academic" data-t="tpl_academic">Académique</button>
+              <button class="tpl-pill" data-tpl="infographic" data-t="tpl_infographic">Infographie</button>
+              <button class="tpl-pill" data-tpl="elegant" data-t="tpl_elegant">Élégant</button>
+              <button class="tpl-pill" data-tpl="twopage" data-t="tpl_twopage">Deux pages</button>
             </div>
           </div>
 
@@ -368,6 +408,34 @@
               <input type="checkbox" id="tog-photo" checked />
               <span class="tog-track"></span>
             </label>
+          </div>
+
+          <!-- Sliders customisation -->
+          <div class="mt-4 space-y-3">
+            <div>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300 flex justify-between" data-t="font_size">
+                Taille de police <span id="val-font-size" class="text-xs text-gray-400">100%</span>
+              </label>
+              <input type="range" id="slider-font-size" min="80" max="130" value="100" step="5" class="cv-slider w-full" />
+            </div>
+            <div>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300 flex justify-between" data-t="spacing">
+                Espacement <span id="val-spacing" class="text-xs text-gray-400">100%</span>
+              </label>
+              <input type="range" id="slider-spacing" min="70" max="150" value="100" step="5" class="cv-slider w-full" />
+            </div>
+            <div>
+              <label class="text-sm font-medium text-gray-700 dark:text-gray-300 flex justify-between" data-t="sidebar_width">
+                Largeur sidebar <span id="val-sidebar-width" class="text-xs text-gray-400">220px</span>
+              </label>
+              <input type="range" id="slider-sidebar-width" min="160" max="280" value="220" step="10" class="cv-slider w-full" />
+            </div>
+          </div>
+
+          <!-- Section visibility toggles -->
+          <div class="mt-4">
+            <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block" data-t="section_visibility">Sections visibles</label>
+            <div id="section-toggles" class="space-y-1"></div>
           </div>
         </div>
       </div>
@@ -439,6 +507,65 @@
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════ MODAL: ATS CHECKER ═══ -->
+<div id="modal-ats" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="ATS Score Checker">
+  <div class="modal-box max-w-2xl">
+    <div class="modal-header">
+      <h2 class="font-semibold text-lg" data-t="ats_checker">Score ATS</h2>
+      <button onclick="closeModal('modal-ats')" class="modal-close" aria-label="Fermer">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="mb-4">
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block" data-t="ats_paste_job">Collez l'offre d'emploi ici</label>
+        <textarea id="ats-job-desc" class="fl-input" rows="6" style="resize:vertical;" placeholder=" "></textarea>
+      </div>
+      <button id="btn-ats-analyze" class="nav-btn primary w-full" data-t="ats_analyze">Analyser</button>
+      <div id="ats-results" class="mt-4 hidden">
+        <div id="ats-score-display" class="text-center mb-4">
+          <div class="text-5xl font-bold" id="ats-score-num" style="color:var(--accent);">0</div>
+          <div class="text-sm text-gray-500" data-t="ats_score">Score</div>
+        </div>
+        <div id="ats-suggestions-list" class="mb-3"></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <h4 class="text-sm font-semibold text-green-600 mb-1" data-t="ats_matched">Mots-clés trouvés</h4>
+            <div id="ats-matched-list" class="flex flex-wrap gap-1"></div>
+          </div>
+          <div>
+            <h4 class="text-sm font-semibold text-red-500 mb-1" data-t="ats_missing">Mots-clés manquants</h4>
+            <div id="ats-missing-list" class="flex flex-wrap gap-1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ MODAL: AI SETTINGS ═══ -->
+<div id="modal-ai" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="AI Settings">
+  <div class="modal-box max-w-lg">
+    <div class="modal-header">
+      <h2 class="font-semibold text-lg" data-t="ai_settings">Paramètres IA</h2>
+      <button onclick="closeModal('modal-ai')" class="modal-close" aria-label="Fermer">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="mb-4">
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block" data-t="ai_provider">Fournisseur</label>
+        <div class="flex gap-2">
+          <button class="tpl-pill active" data-ai-provider="openai" id="ai-prov-openai">OpenAI</button>
+          <button class="tpl-pill" data-ai-provider="anthropic" id="ai-prov-anthropic">Anthropic</button>
+        </div>
+      </div>
+      <div class="fl-wrap mb-4">
+        <input type="password" id="ai-api-key" class="fl-input" placeholder=" " />
+        <label class="fl-label" data-t="ai_api_key">Clé API</label>
+      </div>
+      <button id="btn-ai-save" class="nav-btn primary w-full">OK</button>
+      <p class="text-xs text-gray-400 mt-2 text-center">Votre clé est stockée uniquement dans votre navigateur (localStorage).</p>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════════════════════════════ MOBILE PREVIEW FAB ═══ -->
 <button id="fab-preview" class="fab-preview" onclick="openMobilePreview()" aria-label="Voir mon CV">
   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -462,6 +589,7 @@
 <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-5 py-3 rounded-xl shadow-xl text-sm font-medium opacity-0 transition-opacity duration-300 pointer-events-none"></div>
 
 <script src="templates.js"></script>
+<!-- ats.js, content-library.js, ai.js loaded on demand via loadScript() -->
 <script src="app.js"></script>
 </body>
 </html>

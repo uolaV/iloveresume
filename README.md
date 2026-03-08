@@ -7,8 +7,8 @@ Everything runs in your browser. Your data never leaves your device.
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Try_Now-4f6ef7?style=for-the-badge&logo=googlechrome&logoColor=white)](https://uolav.github.io/iloveresume/)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-green?style=for-the-badge)](LICENSE)
-[![Templates](https://img.shields.io/badge/Templates-4-orange?style=for-the-badge)](#-templates)
-[![Languages](https://img.shields.io/badge/Languages-4-blue?style=for-the-badge)](#-at-a-glance)
+[![Templates](https://img.shields.io/badge/Templates-12-orange?style=for-the-badge)](#-templates)
+[![Languages](https://img.shields.io/badge/Languages-14-blue?style=for-the-badge)](#-at-a-glance)
 
 [![Zero install](https://img.shields.io/badge/Zero_Install-Just_open_a_URL-333?style=flat-square)]()
 [![Works offline](https://img.shields.io/badge/Works_Offline-Service_Worker-333?style=flat-square)]()
@@ -33,26 +33,38 @@ Most resume builders require an account, store your data on their servers, or lo
 
 | | |
 |---|---|
-| 🎨 **4 templates** | Modern · Classic · Bold · Compact — each with custom accent colors |
-| 🗣️ **4 languages** | French · English · German · Spanish |
+| 🎨 **12 templates** | Modern · Classic · Bold · Compact · Executive · Creative · Technical · Minimal · Academic · Infographic · Elegant · Two Page |
+| 🗣️ **14 languages** | FR · EN · DE · ES · PT · IT · NL · PL · TR · ZH · JA · KO · HI · AR (RTL) |
 | 📄 **PDF export** | High-fidelity A4, multi-page with continuation headers |
+| 🤖 **AI-powered** | BYOK — generate summaries, improve bullets (OpenAI + Anthropic) |
+| 🎯 **ATS Score** | Client-side job description analyzer with keyword matching |
+| 🎛️ **Customisation** | Font size, spacing & sidebar width sliders, section toggles |
 | 🌙 **Dark mode** | Full dark theme for comfortable editing |
 | 📱 **Mobile friendly** | Responsive design with mobile CV preview |
+| ♿ **Accessible** | WCAG AA — skip-to-content, aria-live, focus-visible |
 | 📦 **0 dependencies** | Just open `index.html` — no build, no install |
 
 ## ✨ Features
 
 ### 📝 Complete Resume Sections
-Personal info · Professional summary · Work experience · Education · Skills (with proficiency levels) · Languages · Certifications · Interests · **Projects** · **Volunteer work** · **Custom sections** (unlimited, freeform).
+Personal info · Professional summary · Work experience · Education · Skills · Languages · Certifications · Interests · Projects · Volunteer work · Publications · References · Custom sections (unlimited).
 
-### 🎨 4 Templates
+### 🎨 12 Templates
 
 - **Modern** — Clean sidebar layout with accent color highlights
 - **Classic** — Traditional two-column, professional and timeless
 - **Bold** — Eye-catching headers with colored accents
 - **Compact** — Dense, space-efficient for experienced professionals
+- **Executive** — Conservative two-column for senior roles
+- **Creative** — Colorful sidebar with visual flair
+- **Technical** — Structured layout for developers and engineers
+- **Minimal** — Stripped-back, content-first design
+- **Academic** — Publication-focused for researchers
+- **Infographic** — Timeline-style visual resume
+- **Elegant** — Refined serif typography
+- **Two Page** — Extended format for detailed experience
 
-Each template supports custom accent colors and adapts to all sections dynamically.
+Each template supports custom accent colors, font size/spacing/sidebar sliders, section toggles, and drag-and-drop reordering.
 
 ### 📑 Professional PDF Export
 High-fidelity A4 PDFs with smart multi-page detection and continuation headers. Print-ready, ATS-compatible formatting.
@@ -66,7 +78,7 @@ High-fidelity A4 PDFs with smart multi-page detection and continuation headers. 
 Automatic save after every change · up to 20 snapshots in local history · restore any previous version with one click.
 
 ### 🎨 Modern Interface
-Live A4 preview · 5-step guided stepper · dark mode toggle · floating label inputs · debounced rendering · PWA installable.
+Live A4 preview · 5-step guided stepper · dark mode toggle · floating label inputs · debounced rendering · PWA installable · lazy-loaded scripts for fast initial load.
 
 ## 🚀 Getting Started
 
@@ -90,12 +102,15 @@ No build step. No `npm install`. Zero configuration.
 iloveresume/
 ├── index.html      → Structure, forms, modals, stepper
 ├── style.css       → Custom styles (floating labels, stepper, A4 preview, dark mode…)
-├── templates.js    → 4 resume templates (pure functions → HTML strings)
-├── app.js          → All logic — state, rendering, PDF export, i18n, share
+├── templates.js    → 12 resume templates (pure functions → HTML strings)
+├── app.js          → State, rendering, PDF export, i18n (14 langs), share, customisation
+├── ats.js          → ATS score checker (client-side keyword analysis)
+├── ai.js           → AI integration (BYOK — OpenAI + Anthropic)
+├── content-library.js → Action verbs, bullet templates, weak word detector
 └── sw.js           → Service Worker for offline support
 ```
 
-**Stack:** Vanilla JS · Tailwind CSS (CDN) · html2pdf.js · pako · Google Fonts (Inter)
+**Stack:** Vanilla JS · Tailwind CSS (CDN) · html2pdf.js · pako · SortableJS · Google Fonts
 
 ## 🔒 Privacy & Data
 
