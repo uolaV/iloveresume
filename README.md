@@ -144,6 +144,12 @@ Yes. Use the Share button to copy a link that contains your full resume state (g
 Currently one at a time, stored in localStorage. You can export/import JSON files to manage multiple versions.
 </details>
 
+## 🧾 Also by uolaV
+
+| Project | Description | |
+|---|---|---|
+| **[iloveinvoice](https://github.com/uolaV/iloveinvoice)** | Free, open-source invoice generator — 64 countries, 10 languages, full tax compliance. Same philosophy: no sign-up, no server, 100% private. | [Try it →](https://uolav.github.io/iloveinvoice/) |
+
 ## 🤝 Contributing
 
 Contributions are welcome! Fork the repo, make your changes, and open a pull request. No build tools needed — just edit the source files.
