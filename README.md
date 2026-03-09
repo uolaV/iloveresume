@@ -8,7 +8,7 @@ Everything runs in your browser. Your data never leaves your device.
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Try_Now-4f6ef7?style=for-the-badge&logo=googlechrome&logoColor=white)](https://uolav.github.io/iloveresume/)
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-green?style=for-the-badge)](LICENSE)
 [![Templates](https://img.shields.io/badge/Templates-12-orange?style=for-the-badge)](#-templates)
-[![Languages](https://img.shields.io/badge/Languages-14-blue?style=for-the-badge)](#-at-a-glance)
+[![Languages](https://img.shields.io/badge/Languages-28-blue?style=for-the-badge)](#-at-a-glance)
 
 [![Zero install](https://img.shields.io/badge/Zero_Install-Just_open_a_URL-333?style=flat-square)]()
 [![Works offline](https://img.shields.io/badge/Works_Offline-Service_Worker-333?style=flat-square)]()
@@ -34,7 +34,7 @@ Most resume builders require an account, store your data on their servers, or lo
 | | |
 |---|---|
 | 🎨 **12 templates** | Modern · Classic · Bold · Compact · Executive · Creative · Technical · Minimal · Academic · Infographic · Elegant · Two Page |
-| 🗣️ **14 languages** | FR · EN · DE · ES · PT · IT · NL · PL · TR · ZH · JA · KO · HI · AR (RTL) |
+| 🗣️ **28 languages** | FR · EN · DE · ES · PT · IT · NL · PL · TR · ZH · JA · KO · HI · AR · RU · HE · SV · ID · RO · CS · UK · EL · HU · NB · DA · FI · VI · TH |
 | 📄 **PDF export** | High-fidelity A4, multi-page with continuation headers |
 | 🎯 **ATS Score** | Client-side job description analyzer with keyword matching |
 | 🎛️ **Customisation** | Font size, spacing & sidebar width sliders, section toggles |
@@ -44,6 +44,20 @@ Most resume builders require an account, store your data on their servers, or lo
 | 📦 **0 dependencies** | Just open `index.html` — no build, no install |
 
 ## ✨ Features
+
+### 🌍 28 Languages — Global Coverage
+Full interface translations covering major tech markets worldwide:
+
+- **Western Europe:** French, English, German, Spanish, Portuguese, Italian, Dutch
+- **Eastern Europe:** Polish, Romanian, Czech, Ukrainian, Hungarian
+- **Nordics:** Swedish, Norwegian, Danish, Finnish
+- **Middle East:** Hebrew, Arabic (RTL)
+- **East Asia:** Chinese, Japanese, Korean
+- **South Asia:** Hindi
+- **Southeast Asia:** Indonesian, Vietnamese, Thai
+- **Ex-USSR:** Russian, Ukrainian
+
+All UI elements, templates, and ATS suggestions fully localized.
 
 ### 📝 Complete Resume Sections
 Personal info · Professional summary · Work experience · Education · Skills · Languages · Certifications · Interests · Projects · Volunteer work · Publications · References · Custom sections (unlimited).
