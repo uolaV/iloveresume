@@ -2111,6 +2111,7 @@ function addExperience(data = {}) {
   const id = genId();
   experiences.push({ id, company: data.company||'', role: data.role||'', startDate: data.startDate||'', endDate: data.endDate||'', current: data.current||false, bullets: data.bullets||'' });
   renderExperiences();
+  commitChange();
 }
 
 function removeExperience(id) {
@@ -2173,6 +2174,7 @@ function addEducation(data = {}) {
   const id = genId();
   education.push({ id, school: data.school||'', degree: data.degree||'', field: data.field||'', startDate: data.startDate||'', endDate: data.endDate||'', grade: data.grade||'' });
   renderEducation();
+  commitChange();
 }
 
 function removeEducation(id) {
@@ -2234,6 +2236,7 @@ function addSkillGroup(data = {}) {
   const id = genId();
   skills.push({ id, category: data.category||'', items: data.items||[] });
   renderSkills();
+  commitChange();
 }
 
 function removeSkillGroup(id) {
@@ -2315,6 +2318,7 @@ function addProject(data = {}) {
   const id = genId();
   projects.push({ id, name: data.name||'', description: data.description||'', url: data.url||'', tech: data.tech||'' });
   renderProjects();
+  commitChange();
 }
 
 function removeProject(id) {
@@ -2366,6 +2370,7 @@ function addVolunteer(data = {}) {
   const id = genId();
   volunteer.push({ id, org: data.org||'', role: data.role||'', startDate: data.startDate||'', endDate: data.endDate||'', description: data.description||'' });
   renderVolunteer();
+  commitChange();
 }
 
 function removeVolunteer(id) {
@@ -2421,6 +2426,7 @@ function addCustomSection(data = {}) {
   const id = genId();
   customSections.push({ id, title: data.title||'', entries: data.entries||[] });
   renderCustomSections();
+  commitChange();
 }
 
 function removeCustomSection(id) {
@@ -2529,6 +2535,7 @@ function addCertification(data = {}) {
   const id = genId();
   extras.certifications.push({ id, name: data.name||'', issuer: data.issuer||'', date: data.date||'' });
   renderCertifications();
+  commitChange();
 }
 
 function removeCertification(id) {
@@ -2572,6 +2579,7 @@ function addLangItem(data = {}) {
   const id = genId();
   extras.languages.push({ id, name: data.name||'', level: data.level||'' });
   renderLangItems();
+  commitChange();
 }
 
 function removeLangItem(id) {
@@ -2615,6 +2623,7 @@ function addPublication(data = {}) {
   const id = genId();
   publications.push({ id, title: data.title||'', authors: data.authors||'', venue: data.venue||'', date: data.date||'', url: data.url||'' });
   renderPublications();
+  commitChange();
 }
 
 function removePublication(id) {
@@ -2673,6 +2682,7 @@ function addReference(data = {}) {
   const id = genId();
   references.push({ id, name: data.name||'', title: data.title||'', company: data.company||'', email: data.email||'', phone: data.phone||'' });
   renderReferences();
+  commitChange();
 }
 
 function removeReference(id) {
