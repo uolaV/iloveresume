@@ -230,6 +230,13 @@ textarea.fl-input:not(:placeholder-shown) ~ .fl-label {
   color: inherit;
 }
 
+/* Responsive: hide on mobile (<640px), show on sm+ */
+@media (max-width: 639px) {
+  .desktop-only {
+    display: none !important;
+  }
+}
+
 .pill-btn:hover {
   border-color: var(--accent);
   color: var(--accent);

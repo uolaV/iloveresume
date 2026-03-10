@@ -67,16 +67,16 @@
     <!-- CV Switcher — dropdown always visible, action buttons desktop-only -->
     <div class="flex items-center gap-1 min-w-0 flex-1 max-w-[220px]">
       <select id="cv-select" class="cv-select" title="Changer de CV" aria-label="Choisir un CV"></select>
-      <button id="btn-rename-cv" class="hidden sm:inline-flex pill-btn !p-1.5" title="Renommer ce CV" aria-label="Renommer ce CV">
+      <button id="btn-rename-cv" class="desktop-only pill-btn !p-1.5" title="Renommer ce CV" aria-label="Renommer ce CV">
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
       </button>
-      <button id="btn-new-cv" class="hidden sm:inline-flex pill-btn !p-1.5" title="Nouveau CV" aria-label="Créer un nouveau CV">
+      <button id="btn-new-cv" class="desktop-only pill-btn !p-1.5" title="Nouveau CV" aria-label="Créer un nouveau CV">
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
       </button>
-      <button id="btn-dup-cv" class="hidden sm:inline-flex pill-btn !p-1.5" title="Dupliquer ce CV" aria-label="Dupliquer ce CV">
+      <button id="btn-dup-cv" class="desktop-only pill-btn !p-1.5" title="Dupliquer ce CV" aria-label="Dupliquer ce CV">
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
       </button>
-      <button id="btn-delete-cv" class="hidden sm:inline-flex pill-btn !p-1.5 text-red-400 hover:text-red-600" title="Supprimer ce CV" aria-label="Supprimer ce CV">
+      <button id="btn-delete-cv" class="desktop-only pill-btn !p-1.5 text-red-400 hover:text-red-600" title="Supprimer ce CV" aria-label="Supprimer ce CV">
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
       </button>
     </div>
@@ -91,15 +91,15 @@
     <div class="flex items-center gap-1 sm:gap-2 shrink-0">
       <span id="save-indicator" class="save-indicator hidden md:inline" data-t="saved_indicator">Sauvegardé</span>
       <!-- ATS, history, share: desktop only -->
-      <button id="btn-ats" class="hidden sm:inline-flex pill-btn items-center gap-1" title="ATS Score" aria-label="ATS Score Checker">
+      <button id="btn-ats" class="desktop-only pill-btn" title="ATS Score" aria-label="ATS Score Checker">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
         <span class="hidden lg:inline text-sm" data-t="ats_checker">Score ATS</span>
       </button>
-      <button id="btn-history" class="hidden sm:inline-flex pill-btn items-center gap-1" title="Historique" aria-label="Historique des CV">
+      <button id="btn-history" class="desktop-only pill-btn" title="Historique" aria-label="Historique des CV">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <span class="hidden lg:inline text-sm" data-t="history">Historique</span>
       </button>
-      <button id="btn-share" class="hidden sm:inline-flex pill-btn items-center gap-1" title="Partager" aria-label="Partager par lien">
+      <button id="btn-share" class="desktop-only pill-btn" title="Partager" aria-label="Partager par lien">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
         <span class="hidden lg:inline text-sm" data-t="share">Partager</span>
       </button>

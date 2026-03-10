@@ -7,7 +7,7 @@
 ═══════════════════════════════════════════════════════════════ */
 
 // ↓ Increment this string on every deployment
-const CACHE_VERSION = 'v5';
+const CACHE_VERSION = 'v6';
 const CACHE_NAME = `iloveresume-${CACHE_VERSION}`;
 
 const ASSETS = [
