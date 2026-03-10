@@ -1858,6 +1858,13 @@ function refreshHeader(el, text) {
  * @param {Function}    [onUpdate] - optional callback(entry, field, el) for side-effects
  */
 function bindDelegated(listEl, arr, onUpdate) {
+  // Cancel any previous delegated listeners on this container.
+  // Without this, every renderXxx() call would stack a new listener
+  // on the same persistent DOM node → n renders = n commitChange() calls per keystroke.
+  if (listEl._delegatedAbort) listEl._delegatedAbort.abort();
+  const controller = new AbortController();
+  listEl._delegatedAbort = controller;
+
   function handler(e) {
     const field = e.target.dataset.field;
     if (!field) return;
@@ -1868,8 +1875,8 @@ function bindDelegated(listEl, arr, onUpdate) {
     onUpdate?.(entry, field, e.target);
     commitChange();
   }
-  listEl.addEventListener('input', handler);
-  listEl.addEventListener('change', handler);
+  listEl.addEventListener('input',  handler, { signal: controller.signal });
+  listEl.addEventListener('change', handler, { signal: controller.signal });
 }
 
 const $ = id => document.getElementById(id);
