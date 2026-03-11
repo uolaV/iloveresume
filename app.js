@@ -394,7 +394,7 @@ const T = {
     step_profile: 'Profiel', step_exp: 'Ervaring', step_edu: 'Opleiding',
     step_skills: 'Vaardigheden', step_extras: 'Extra',
     full_name: 'Volledige naam *', job_title: 'Functietitel *',
-    summary: 'Samenvatting', phone: 'Telefoon', email: 'E-mail', linkedin: 'LinkedIn', github: 'GitHub / Portfolio', email: 'E-post', linkedin: 'LinkedIn', github: 'GitHub / Portfolio', city: 'Stad / Land',
+    summary: 'Samenvatting', phone: 'Telefoon', email: 'E-mail', linkedin: 'LinkedIn', github: 'GitHub / Portfolio', city: 'Stad / Land',
     website: 'Website', add_photo: 'Foto toevoegen', remove_photo: 'Foto verwijderen',
     add_experience: 'Ervaring toevoegen', add_education: 'Opleiding toevoegen',
     add_skill_group: 'Categorie toevoegen', add_certification: 'Toevoegen',
@@ -1004,7 +1004,7 @@ const T = {
     step_profile: 'Profil', step_exp: 'Erfarenhet', step_edu: 'Utbildning',
     step_skills: 'Färdigheter', step_extras: 'Övrigt',
     full_name: 'Fullständigt namn *', job_title: 'Jobbtitel *',
-    summary: 'Sammanfattning', phone: 'Telefon', email: 'E-mail', linkedin: 'LinkedIn', github: 'GitHub / Portfolio', email: 'E-post', linkedin: 'LinkedIn', github: 'GitHub / Portfolio', city: 'Stad / Land',
+    summary: 'Sammanfattning', phone: 'Telefon', email: 'E-post', linkedin: 'LinkedIn', github: 'GitHub / Portfolio', city: 'Stad / Land',
     website: 'Webbplats', add_photo: 'Lägg till foto', remove_photo: 'Ta bort foto',
     add_experience: 'Lägg till erfarenhet', add_education: 'Lägg till utbildning',
     add_skill_group: 'Lägg till kategori', add_certification: 'Lägg till',
@@ -3129,8 +3129,9 @@ async function downloadPDF() {
   fixPageBreaks(clone);
   injectContinuationHeaders(clone, buildCVState(), accentColor);
 
+  const PDF_TIMEOUT_MS = 30_000;
   try {
-    await html2pdf().set({
+    const pdfPromise = html2pdf().set({
       margin: [0, 0, 0, 0],
       filename,
       image: { type: 'jpeg', quality: 1.0 },
@@ -3160,6 +3161,12 @@ async function downloadPDF() {
       document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 5000);
     });
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('PDF timeout')), PDF_TIMEOUT_MS)
+    );
+
+    await Promise.race([pdfPromise, timeoutPromise]);
 
     showToast(t('pdf_done'));
     saveToHistory();
