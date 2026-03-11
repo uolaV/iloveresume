@@ -3698,10 +3698,8 @@ document.addEventListener('keydown', e => {
 
 // ── Escape helper for HTML attributes ────────────────────────
 
-function esc2(s) {
-  if (!s) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
+// esc2 is an alias for esc() defined in templates.js (same global scope, loaded before app.js)
+const esc2 = esc;
 
 // ── Render all dynamic lists ──────────────────────────────────
 
