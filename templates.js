@@ -50,15 +50,14 @@ function bulletsHtml(text) {
     '</ul>';
 }
 
-function formatDate(d) {
+function formatDate(d, langCode) {
   if (!d) return '';
   // Input: YYYY-MM → Month YYYY (locale-aware via Intl)
   const [y, m] = d.split('-');
   if (!y) return d;
   if (!m) return y;
   try {
-    // `lang` is defined in app.js (same global scope), available at call time
-    const locale = (typeof lang !== 'undefined' && lang) ? lang : 'fr';
+    const locale = langCode || (typeof lang !== 'undefined' && lang) || 'fr';
     return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short' })
       .format(new Date(parseInt(y, 10), parseInt(m, 10) - 1, 1));
   } catch (_) {
@@ -68,9 +67,9 @@ function formatDate(d) {
   }
 }
 
-function dateRange(start, end, current, t) {
-  const s = formatDate(start);
-  const e = current ? (t('present') || 'Présent') : formatDate(end);
+function dateRange(start, end, current, t, langCode) {
+  const s = formatDate(start, langCode);
+  const e = current ? (t('present') || 'Présent') : formatDate(end, langCode);
   if (!s && !e) return '';
   if (!s) return e;
   if (!e) return s;
@@ -163,7 +162,7 @@ function tplModern(cv, accent, font, t) {
               <div style="font-weight:600;font-size:0.9rem;">${esc(e.role)}</div>
               <div style="font-size:0.8rem;color:#555;">${esc(e.company)}</div>
             </div>
-            <div style="font-size:0.75rem;color:#888;white-space:nowrap;">${dateRange(e.startDate, e.endDate, e.current, t)}</div>
+            <div style="font-size:0.75rem;color:#888;white-space:nowrap;">${dateRange(e.startDate, e.endDate, e.current, t, lang)}</div>
           </div>
           ${bulletsHtml(e.bullets)}
         </div>`).join('')}
@@ -179,7 +178,7 @@ function tplModern(cv, accent, font, t) {
               <div style="font-weight:600;font-size:0.9rem;">${esc(e.degree)}${e.field ? ` — ${esc(e.field)}` : ''}</div>
               <div style="font-size:0.8rem;color:#555;">${esc(e.school)}</div>
             </div>
-            <div style="font-size:0.75rem;color:#888;white-space:nowrap;">${dateRange(e.startDate, e.endDate, false, t)}</div>
+            <div style="font-size:0.75rem;color:#888;white-space:nowrap;">${dateRange(e.startDate, e.endDate, false, t, lang)}</div>
           </div>
           ${e.grade ? `<div style="font-size:0.78rem;color:#666;margin-top:0.2rem;">${esc(e.grade)}</div>` : ''}
         </div>`).join('')}
@@ -191,7 +190,7 @@ function tplModern(cv, accent, font, t) {
       ${cv.extras.certifications.map(c => `
         <div class="cv-item" style="display:flex;justify-content:space-between;font-size:0.82rem;margin-bottom:0.3rem;">
           <span>${esc(c.name)}${c.issuer ? ` <span style="color:#777;">· ${esc(c.issuer)}</span>` : ''}</span>
-          ${c.date ? `<span style="color:#888;font-size:0.76rem;">${formatDate(c.date)}</span>` : ''}
+          ${c.date ? `<span style="color:#888;font-size:0.76rem;">${formatDate(c.date, lang)}</span>` : ''}
         </div>`).join('')}
     </div>` : '';
 
@@ -216,7 +215,7 @@ function tplModern(cv, accent, font, t) {
               <div style="font-weight:600;font-size:0.9rem;">${esc(v.role)}</div>
               <div style="font-size:0.8rem;color:#555;">${esc(v.org)}</div>
             </div>
-            <div style="font-size:0.75rem;color:#888;white-space:nowrap;">${dateRange(v.startDate, v.endDate, false, t)}</div>
+            <div style="font-size:0.75rem;color:#888;white-space:nowrap;">${dateRange(v.startDate, v.endDate, false, t, lang)}</div>
           </div>
           ${bulletsHtml(v.description)}
         </div>`).join('')}
@@ -245,7 +244,7 @@ function tplModern(cv, accent, font, t) {
         <div class="cv-item" style="margin-bottom:0.6rem;">
           <div style="font-weight:600;font-size:0.88rem;">${esc(p.title)}${p.url ? ` <a href="${safeUrl(p.url)}" style="color:${accent};font-size:0.75rem;text-decoration:none;">↗</a>` : ''}</div>
           ${p.authors ? `<div style="font-size:0.78rem;color:#555;">${esc(p.authors)}</div>` : ''}
-          <div style="font-size:0.75rem;color:#888;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date)}` : ''}</div>
+          <div style="font-size:0.75rem;color:#888;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date, lang)}` : ''}</div>
         </div>`).join('')}
     </div>` : '';
 
@@ -327,7 +326,7 @@ function tplClassic(cv, accent, font, t) {
             <span style="font-weight:600;font-size:0.9rem;">${esc(e.role)}</span>
             <span style="color:#777;font-size:0.82rem;"> · ${esc(e.company)}</span>
           </div>
-          <span style="font-size:0.75rem;color:#999;">${dateRange(e.startDate, e.endDate, e.current, t)}</span>
+          <span style="font-size:0.75rem;color:#999;">${dateRange(e.startDate, e.endDate, e.current, t, lang)}</span>
         </div>
         ${bulletsHtml(e.bullets)}
       </div>`).join('')}
@@ -343,7 +342,7 @@ function tplClassic(cv, accent, font, t) {
             <span style="font-weight:600;font-size:0.9rem;">${esc(e.degree)}${e.field ? ` — ${esc(e.field)}` : ''}</span>
             <span style="color:#777;font-size:0.82rem;"> · ${esc(e.school)}</span>
           </div>
-          <span style="font-size:0.75rem;color:#999;">${dateRange(e.startDate, e.endDate, false, t)}</span>
+          <span style="font-size:0.75rem;color:#999;">${dateRange(e.startDate, e.endDate, false, t, lang)}</span>
         </div>
         ${e.grade ? `<div style="font-size:0.78rem;color:#666;">${esc(e.grade)}</div>` : ''}
       </div>`).join('')}
@@ -370,7 +369,7 @@ function tplClassic(cv, accent, font, t) {
     <div data-section="certifications">
     ${sectionTitle(t('certifications') || 'Certifications')}
     ${cv.extras.certifications.map(c => `
-      <div style="font-size:0.82rem;margin-bottom:0.3rem;">${esc(c.name)}${c.issuer ? ` · ${esc(c.issuer)}` : ''}${c.date ? ` <span style="color:#999;">(${formatDate(c.date)})</span>` : ''}</div>`).join('')}
+      <div style="font-size:0.82rem;margin-bottom:0.3rem;">${esc(c.name)}${c.issuer ? ` · ${esc(c.issuer)}` : ''}${c.date ? ` <span style="color:#999;">(${formatDate(c.date, lang)})</span>` : ''}</div>`).join('')}
     </div>` : '';
 
   const interestsBlock = cv.extras.interests ? `
@@ -400,7 +399,7 @@ function tplClassic(cv, accent, font, t) {
             <span style="font-weight:600;font-size:0.9rem;">${esc(v.role)}</span>
             <span style="color:#777;font-size:0.82rem;"> · ${esc(v.org)}</span>
           </div>
-          <span style="font-size:0.75rem;color:#999;">${dateRange(v.startDate, v.endDate, false, t)}</span>
+          <span style="font-size:0.75rem;color:#999;">${dateRange(v.startDate, v.endDate, false, t, lang)}</span>
         </div>
         ${bulletsHtml(v.description)}
       </div>`).join('')}
@@ -429,7 +428,7 @@ function tplClassic(cv, accent, font, t) {
       <div class="cv-item" style="margin-bottom:0.6rem;">
         <div style="font-weight:600;font-size:0.88rem;">${esc(p.title)}${p.url ? ` <a href="${safeUrl(p.url)}" style="color:${accent};font-size:0.75rem;text-decoration:none;">↗</a>` : ''}</div>
         ${p.authors ? `<div style="font-size:0.78rem;color:#555;">${esc(p.authors)}</div>` : ''}
-        <div style="font-size:0.75rem;color:#999;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date)}` : ''}</div>
+        <div style="font-size:0.75rem;color:#999;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date, lang)}` : ''}</div>
       </div>`).join('')}
     </div>` : '';
 
@@ -511,7 +510,7 @@ function tplBold(cv, accent, font, t) {
             <div style="font-weight:700;font-size:0.92rem;">${esc(e.role)}</div>
             <div style="font-size:0.82rem;color:#666;">${esc(e.company)}</div>
           </div>
-          <div style="font-size:0.75rem;color:#999;background:#f3f4f6;padding:0.2rem 0.5rem;border-radius:9999px;">${dateRange(e.startDate, e.endDate, e.current, t)}</div>
+          <div style="font-size:0.75rem;color:#999;background:#f3f4f6;padding:0.2rem 0.5rem;border-radius:9999px;">${dateRange(e.startDate, e.endDate, e.current, t, lang)}</div>
         </div>
         ${bulletsHtml(e.bullets)}
       </div>`).join('')}
@@ -527,7 +526,7 @@ function tplBold(cv, accent, font, t) {
             <div style="font-weight:700;font-size:0.9rem;">${esc(e.degree)}${e.field ? ` — ${esc(e.field)}` : ''}</div>
             <div style="font-size:0.82rem;color:#666;">${esc(e.school)}</div>
           </div>
-          <div style="font-size:0.75rem;color:#999;">${dateRange(e.startDate, e.endDate, false, t)}</div>
+          <div style="font-size:0.75rem;color:#999;">${dateRange(e.startDate, e.endDate, false, t, lang)}</div>
         </div>
         ${e.grade ? `<div style="font-size:0.78rem;color:#666;">${esc(e.grade)}</div>` : ''}
       </div>`).join('')}
@@ -556,7 +555,7 @@ function tplBold(cv, accent, font, t) {
     <div data-section="certifications">
     ${sectionTitle(t('certifications') || 'Certifications')}
     ${cv.extras.certifications.map(c => `
-      <div class="cv-item" style="font-size:0.82rem;margin-bottom:0.3rem;">${esc(c.name)}${c.issuer ? ` · ${esc(c.issuer)}` : ''}${c.date ? ` <span style="color:#999;">(${formatDate(c.date)})</span>` : ''}</div>`).join('')}
+      <div class="cv-item" style="font-size:0.82rem;margin-bottom:0.3rem;">${esc(c.name)}${c.issuer ? ` · ${esc(c.issuer)}` : ''}${c.date ? ` <span style="color:#999;">(${formatDate(c.date, lang)})</span>` : ''}</div>`).join('')}
     </div>` : '';
 
   const projectsBlock = (cv.projects && cv.projects.length) ? `
@@ -580,7 +579,7 @@ function tplBold(cv, accent, font, t) {
             <div style="font-weight:700;font-size:0.92rem;">${esc(v.role)}</div>
             <div style="font-size:0.82rem;color:#666;">${esc(v.org)}</div>
           </div>
-          <div style="font-size:0.75rem;color:#999;background:#f3f4f6;padding:0.2rem 0.5rem;border-radius:9999px;">${dateRange(v.startDate, v.endDate, false, t)}</div>
+          <div style="font-size:0.75rem;color:#999;background:#f3f4f6;padding:0.2rem 0.5rem;border-radius:9999px;">${dateRange(v.startDate, v.endDate, false, t, lang)}</div>
         </div>
         ${bulletsHtml(v.description)}
       </div>`).join('')}
@@ -609,7 +608,7 @@ function tplBold(cv, accent, font, t) {
       <div class="cv-item" style="margin-bottom:0.75rem;padding-left:1rem;border-left:3px solid ${accent}33;">
         <div style="font-weight:700;font-size:0.92rem;">${esc(p.title)}${p.url ? ` <a href="${safeUrl(p.url)}" style="color:${accent};font-size:0.78rem;text-decoration:none;">↗</a>` : ''}</div>
         ${p.authors ? `<div style="font-size:0.82rem;color:#666;">${esc(p.authors)}</div>` : ''}
-        <div style="font-size:0.75rem;color:#999;background:#f3f4f6;padding:0.1rem 0.4rem;border-radius:9999px;display:inline-block;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date)}` : ''}</div>
+        <div style="font-size:0.75rem;color:#999;background:#f3f4f6;padding:0.1rem 0.4rem;border-radius:9999px;display:inline-block;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date, lang)}` : ''}</div>
       </div>`).join('')}
     </div>` : '';
 
@@ -679,7 +678,7 @@ function tplCompact(cv, accent, font, t) {
       <div class="cv-item" style="margin-bottom:0.6rem;">
         <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;">
           <div style="font-size:0.82rem;"><strong>${esc(e.role)}</strong><span style="color:#666;"> · ${esc(e.company)}</span></div>
-          <div style="font-size:0.72rem;color:#888;">${dateRange(e.startDate, e.endDate, e.current, t)}</div>
+          <div style="font-size:0.72rem;color:#888;">${dateRange(e.startDate, e.endDate, e.current, t, lang)}</div>
         </div>
         ${e.bullets ? `<div style="font-size:0.78rem;color:#444;margin-top:0.2rem;">${bulletsHtml(e.bullets)}</div>` : ''}
       </div>`).join('')}
@@ -691,7 +690,7 @@ function tplCompact(cv, accent, font, t) {
     ${cv.education.map(e => `
       <div class="cv-item" style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;margin-bottom:0.35rem;">
         <div style="font-size:0.82rem;"><strong>${esc(e.degree)}${e.field ? ` — ${esc(e.field)}` : ''}</strong><span style="color:#666;"> · ${esc(e.school)}</span></div>
-        <div style="font-size:0.72rem;color:#888;">${dateRange(e.startDate, e.endDate, false, t)}</div>
+        <div style="font-size:0.72rem;color:#888;">${dateRange(e.startDate, e.endDate, false, t, lang)}</div>
       </div>`).join('')}
     </div>` : '';
 
@@ -712,7 +711,7 @@ function tplCompact(cv, accent, font, t) {
   const certBlock = cv.extras.certifications.length ? `
     <div data-section="certifications">
     ${st(t('certifications') || 'Certifications')}
-    ${cv.extras.certifications.map(c => `<div style="font-size:0.8rem;">${esc(c.name)}${c.issuer ? ` · ${esc(c.issuer)}` : ''}${c.date ? ` (${formatDate(c.date)})` : ''}</div>`).join('')}
+    ${cv.extras.certifications.map(c => `<div style="font-size:0.8rem;">${esc(c.name)}${c.issuer ? ` · ${esc(c.issuer)}` : ''}${c.date ? ` (${formatDate(c.date, lang)})` : ''}</div>`).join('')}
     </div>` : '';
 
   const projectsBlock = (cv.projects && cv.projects.length) ? `
@@ -731,7 +730,7 @@ function tplCompact(cv, accent, font, t) {
     ${cv.volunteer.map(v => `
       <div class="cv-item" style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;margin-bottom:0.35rem;">
         <div style="font-size:0.82rem;"><strong>${esc(v.role)}</strong><span style="color:#666;"> · ${esc(v.org)}</span></div>
-        <div style="font-size:0.72rem;color:#888;">${dateRange(v.startDate, v.endDate, false, t)}</div>
+        <div style="font-size:0.72rem;color:#888;">${dateRange(v.startDate, v.endDate, false, t, lang)}</div>
       </div>`).join('')}
     </div>` : '';
 
@@ -750,7 +749,7 @@ function tplCompact(cv, accent, font, t) {
     ${st(t('publications') || 'Publications')}
     ${cv.publications.map(p => `
       <div class="cv-item" style="margin-bottom:0.3rem;">
-        <div style="font-size:0.82rem;"><strong>${esc(p.title)}</strong>${p.url ? ` <span style="color:${accent};font-size:0.72rem;">↗</span>` : ''}${p.venue ? `<span style="color:#666;"> · ${esc(p.venue)}</span>` : ''}${p.date ? ` <span style="color:#888;font-size:0.72rem;">(${formatDate(p.date)})</span>` : ''}</div>
+        <div style="font-size:0.82rem;"><strong>${esc(p.title)}</strong>${p.url ? ` <span style="color:${accent};font-size:0.72rem;">↗</span>` : ''}${p.venue ? `<span style="color:#666;"> · ${esc(p.venue)}</span>` : ''}${p.date ? ` <span style="color:#888;font-size:0.72rem;">(${formatDate(p.date, lang)})</span>` : ''}</div>
         ${p.authors ? `<div style="font-size:0.78rem;color:#666;">${esc(p.authors)}</div>` : ''}
       </div>`).join('')}
     </div>` : '';
@@ -833,7 +832,7 @@ function tplExecutive(cv, accent, font, t) {
         <div style="font-size:0.76rem;margin-bottom:0.35rem;">
           <div style="font-weight:600;">${esc(c.name)}</div>
           ${c.issuer ? `<div style="color:#777;font-size:0.72rem;">${esc(c.issuer)}</div>` : ''}
-          ${c.date ? `<div style="color:#999;font-size:0.7rem;">${formatDate(c.date)}</div>` : ''}
+          ${c.date ? `<div style="color:#999;font-size:0.7rem;">${formatDate(c.date, lang)}</div>` : ''}
         </div>`).join('')}
     </div>` : '';
 
@@ -864,7 +863,7 @@ function tplExecutive(cv, accent, font, t) {
               <div style="font-weight:700;font-size:0.92rem;color:#1a1a1a;">${esc(e.role)}</div>
               <div style="font-size:0.82rem;color:#666;font-style:italic;">${esc(e.company)}</div>
             </div>
-            <div style="font-size:0.75rem;color:#888;">${dateRange(e.startDate, e.endDate, e.current, t)}</div>
+            <div style="font-size:0.75rem;color:#888;">${dateRange(e.startDate, e.endDate, e.current, t, lang)}</div>
           </div>
           ${bulletsHtml(e.bullets)}
         </div>`).join('')}
@@ -880,7 +879,7 @@ function tplExecutive(cv, accent, font, t) {
               <div style="font-weight:700;font-size:0.9rem;">${esc(e.degree)}${e.field ? ` — ${esc(e.field)}` : ''}</div>
               <div style="font-size:0.82rem;color:#666;font-style:italic;">${esc(e.school)}</div>
             </div>
-            <div style="font-size:0.75rem;color:#888;">${dateRange(e.startDate, e.endDate, false, t)}</div>
+            <div style="font-size:0.75rem;color:#888;">${dateRange(e.startDate, e.endDate, false, t, lang)}</div>
           </div>
           ${e.grade ? `<div style="font-size:0.78rem;color:#666;margin-top:0.15rem;">${esc(e.grade)}</div>` : ''}
         </div>`).join('')}
@@ -907,7 +906,7 @@ function tplExecutive(cv, accent, font, t) {
               <div style="font-weight:700;font-size:0.9rem;">${esc(v.role)}</div>
               <div style="font-size:0.82rem;color:#666;font-style:italic;">${esc(v.org)}</div>
             </div>
-            <div style="font-size:0.75rem;color:#888;">${dateRange(v.startDate, v.endDate, false, t)}</div>
+            <div style="font-size:0.75rem;color:#888;">${dateRange(v.startDate, v.endDate, false, t, lang)}</div>
           </div>
           ${bulletsHtml(v.description)}
         </div>`).join('')}
@@ -920,7 +919,7 @@ function tplExecutive(cv, accent, font, t) {
         <div class="cv-item" style="margin-bottom:0.7rem;">
           <div style="font-weight:600;font-size:0.85rem;">${p.url ? `<a href="${safeUrl(p.url)}" style="color:${accent};text-decoration:none;">${esc(p.title)}</a>` : esc(p.title)}</div>
           ${p.authors ? `<div style="font-size:0.78rem;color:#555;">${esc(p.authors)}</div>` : ''}
-          <div style="font-size:0.75rem;color:#888;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date)}` : ''}</div>
+          <div style="font-size:0.75rem;color:#888;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date, lang)}` : ''}</div>
         </div>`).join('')}
     </div>` : '';
 
@@ -1023,7 +1022,7 @@ function tplCreative(cv, accent, font, t) {
             <div style="font-weight:700;font-size:0.92rem;color:#222;">${esc(e.role)}</div>
             <div style="font-size:0.82rem;color:${accent};">${esc(e.company)}</div>
           </div>
-          <div style="font-size:0.72rem;color:#fff;background:${accent};padding:0.15rem 0.6rem;border-radius:20px;">${dateRange(e.startDate, e.endDate, e.current, t)}</div>
+          <div style="font-size:0.72rem;color:#fff;background:${accent};padding:0.15rem 0.6rem;border-radius:20px;">${dateRange(e.startDate, e.endDate, e.current, t, lang)}</div>
         </div>
         ${bulletsHtml(e.bullets)}
       </div>`).join('')}
@@ -1039,7 +1038,7 @@ function tplCreative(cv, accent, font, t) {
             <div style="font-weight:700;font-size:0.9rem;">${esc(e.degree)}${e.field ? ` — ${esc(e.field)}` : ''}</div>
             <div style="font-size:0.82rem;color:${accent};">${esc(e.school)}</div>
           </div>
-          <div style="font-size:0.72rem;color:#fff;background:${accent};padding:0.15rem 0.6rem;border-radius:20px;">${dateRange(e.startDate, e.endDate, false, t)}</div>
+          <div style="font-size:0.72rem;color:#fff;background:${accent};padding:0.15rem 0.6rem;border-radius:20px;">${dateRange(e.startDate, e.endDate, false, t, lang)}</div>
         </div>
         ${e.grade ? `<div style="font-size:0.78rem;color:#666;margin-top:0.2rem;">${esc(e.grade)}</div>` : ''}
       </div>`).join('')}
@@ -1069,7 +1068,7 @@ function tplCreative(cv, accent, font, t) {
     ${sectionTitle(t('certifications') || 'Certifications')}
     ${cv.extras.certifications.map(c => `
       <div class="cv-item" style="font-size:0.82rem;margin-bottom:0.4rem;padding-left:0.75rem;border-left:2px solid ${accent}44;">
-        ${esc(c.name)}${c.issuer ? ` <span style="color:#777;">· ${esc(c.issuer)}</span>` : ''}${c.date ? ` <span style="color:#999;">(${formatDate(c.date)})</span>` : ''}
+        ${esc(c.name)}${c.issuer ? ` <span style="color:#777;">· ${esc(c.issuer)}</span>` : ''}${c.date ? ` <span style="color:#999;">(${formatDate(c.date, lang)})</span>` : ''}
       </div>`).join('')}
     </div>` : '';
 
@@ -1100,7 +1099,7 @@ function tplCreative(cv, accent, font, t) {
             <div style="font-weight:700;font-size:0.9rem;">${esc(v.role)}</div>
             <div style="font-size:0.82rem;color:${accent};">${esc(v.org)}</div>
           </div>
-          <div style="font-size:0.72rem;color:#fff;background:${accent};padding:0.15rem 0.6rem;border-radius:20px;">${dateRange(v.startDate, v.endDate, false, t)}</div>
+          <div style="font-size:0.72rem;color:#fff;background:${accent};padding:0.15rem 0.6rem;border-radius:20px;">${dateRange(v.startDate, v.endDate, false, t, lang)}</div>
         </div>
         ${bulletsHtml(v.description)}
       </div>`).join('')}
@@ -1113,7 +1112,7 @@ function tplCreative(cv, accent, font, t) {
       <div class="cv-item" style="margin-bottom:0.7rem;padding-left:0.75rem;border-left:2px solid ${accent}44;">
         <div style="font-weight:600;font-size:0.85rem;">${p.url ? `<a href="${safeUrl(p.url)}" style="color:${accent};text-decoration:none;">${esc(p.title)}</a>` : esc(p.title)}</div>
         ${p.authors ? `<div style="font-size:0.78rem;color:#555;">${esc(p.authors)}</div>` : ''}
-        <div style="font-size:0.75rem;color:#888;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date)}` : ''}</div>
+        <div style="font-size:0.75rem;color:#888;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date, lang)}` : ''}</div>
       </div>`).join('')}
     </div>` : '';
 
@@ -1217,7 +1216,7 @@ function tplTechnical(cv, accent, font, t) {
             <div style="font-weight:700;font-size:0.9rem;font-family:${monoFont};color:#333;">${esc(e.role)}</div>
             <div style="font-size:0.8rem;color:${accent};font-family:${monoFont};">${esc(e.company)}</div>
           </div>
-          <div style="font-size:0.72rem;color:#888;font-family:${monoFont};background:#f0f0f0;padding:0.15rem 0.5rem;border-radius:3px;">${dateRange(e.startDate, e.endDate, e.current, t)}</div>
+          <div style="font-size:0.72rem;color:#888;font-family:${monoFont};background:#f0f0f0;padding:0.15rem 0.5rem;border-radius:3px;">${dateRange(e.startDate, e.endDate, e.current, t, lang)}</div>
         </div>
         ${bulletsHtml(e.bullets)}
       </div>`).join('')}
@@ -1233,7 +1232,7 @@ function tplTechnical(cv, accent, font, t) {
             <div style="font-weight:700;font-size:0.88rem;font-family:${monoFont};">${esc(e.degree)}${e.field ? ` — ${esc(e.field)}` : ''}</div>
             <div style="font-size:0.8rem;color:${accent};font-family:${monoFont};">${esc(e.school)}</div>
           </div>
-          <div style="font-size:0.72rem;color:#888;font-family:${monoFont};">${dateRange(e.startDate, e.endDate, false, t)}</div>
+          <div style="font-size:0.72rem;color:#888;font-family:${monoFont};">${dateRange(e.startDate, e.endDate, false, t, lang)}</div>
         </div>
         ${e.grade ? `<div style="font-size:0.78rem;color:#666;font-family:${monoFont};">${esc(e.grade)}</div>` : ''}
       </div>`).join('')}
@@ -1273,7 +1272,7 @@ function tplTechnical(cv, accent, font, t) {
     <div data-section="certifications">
     ${sectionTitle(t('certifications') || 'Certifications')}
     ${cv.extras.certifications.map(c => `
-      <div class="cv-item" style="font-size:0.82rem;margin-bottom:0.35rem;font-family:${monoFont};">✓ ${esc(c.name)}${c.issuer ? ` <span style="color:#777;">· ${esc(c.issuer)}</span>` : ''}${c.date ? ` <span style="color:#999;">(${formatDate(c.date)})</span>` : ''}</div>`).join('')}
+      <div class="cv-item" style="font-size:0.82rem;margin-bottom:0.35rem;font-family:${monoFont};">✓ ${esc(c.name)}${c.issuer ? ` <span style="color:#777;">· ${esc(c.issuer)}</span>` : ''}${c.date ? ` <span style="color:#999;">(${formatDate(c.date, lang)})</span>` : ''}</div>`).join('')}
     </div>` : '';
 
   const interestsBlock = cv.extras.interests ? `
@@ -1292,7 +1291,7 @@ function tplTechnical(cv, accent, font, t) {
             <div style="font-weight:700;font-size:0.88rem;font-family:${monoFont};">${esc(v.role)}</div>
             <div style="font-size:0.8rem;color:${accent};font-family:${monoFont};">${esc(v.org)}</div>
           </div>
-          <div style="font-size:0.72rem;color:#888;font-family:${monoFont};">${dateRange(v.startDate, v.endDate, false, t)}</div>
+          <div style="font-size:0.72rem;color:#888;font-family:${monoFont};">${dateRange(v.startDate, v.endDate, false, t, lang)}</div>
         </div>
         ${bulletsHtml(v.description)}
       </div>`).join('')}
@@ -1305,7 +1304,7 @@ function tplTechnical(cv, accent, font, t) {
       <div class="cv-item" style="margin-bottom:0.7rem;font-family:${monoFont};">
         <div style="font-weight:600;font-size:0.82rem;">${p.url ? `<a href="${safeUrl(p.url)}" style="color:${accent};text-decoration:none;">${esc(p.title)}</a>` : esc(p.title)}</div>
         ${p.authors ? `<div style="font-size:0.75rem;color:#555;">${esc(p.authors)}</div>` : ''}
-        <div style="font-size:0.72rem;color:#888;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date)}` : ''}</div>
+        <div style="font-size:0.72rem;color:#888;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date, lang)}` : ''}</div>
       </div>`).join('')}
     </div>` : '';
 
@@ -1401,7 +1400,7 @@ function tplMinimal(cv, accent, font, t) {
             <span style="font-weight:500;font-size:0.9rem;color:#222;">${esc(e.role)}</span>
             <span style="color:#999;font-size:0.85rem;font-weight:300;"> — ${esc(e.company)}</span>
           </div>
-          <span style="font-size:0.75rem;color:#bbb;font-weight:300;">${dateRange(e.startDate, e.endDate, e.current, t)}</span>
+          <span style="font-size:0.75rem;color:#bbb;font-weight:300;">${dateRange(e.startDate, e.endDate, e.current, t, lang)}</span>
         </div>
         ${bulletsHtml(e.bullets)}
       </div>`).join('')}
@@ -1417,7 +1416,7 @@ function tplMinimal(cv, accent, font, t) {
             <span style="font-weight:500;font-size:0.9rem;color:#222;">${esc(e.degree)}${e.field ? ` — ${esc(e.field)}` : ''}</span>
             <span style="color:#999;font-size:0.85rem;font-weight:300;"> — ${esc(e.school)}</span>
           </div>
-          <span style="font-size:0.75rem;color:#bbb;font-weight:300;">${dateRange(e.startDate, e.endDate, false, t)}</span>
+          <span style="font-size:0.75rem;color:#bbb;font-weight:300;">${dateRange(e.startDate, e.endDate, false, t, lang)}</span>
         </div>
         ${e.grade ? `<div style="font-size:0.8rem;color:#888;font-weight:300;margin-top:0.15rem;">${esc(e.grade)}</div>` : ''}
       </div>`).join('')}
@@ -1440,7 +1439,7 @@ function tplMinimal(cv, accent, font, t) {
   const certBlock = cv.extras.certifications.length ? `
     <div data-section="certifications">
     ${sectionTitle(t('certifications') || 'Certifications')}
-    ${cv.extras.certifications.map(c => `<div style="font-size:0.85rem;color:#444;font-weight:300;margin-bottom:0.3rem;">${esc(c.name)}${c.issuer ? ` · ${esc(c.issuer)}` : ''}${c.date ? ` (${formatDate(c.date)})` : ''}</div>`).join('')}
+    ${cv.extras.certifications.map(c => `<div style="font-size:0.85rem;color:#444;font-weight:300;margin-bottom:0.3rem;">${esc(c.name)}${c.issuer ? ` · ${esc(c.issuer)}` : ''}${c.date ? ` (${formatDate(c.date, lang)})` : ''}</div>`).join('')}
     </div>` : '';
 
   const interestsBlock = cv.extras.interests ? `
@@ -1470,7 +1469,7 @@ function tplMinimal(cv, accent, font, t) {
             <span style="font-weight:500;font-size:0.9rem;color:#222;">${esc(v.role)}</span>
             <span style="color:#999;font-size:0.85rem;font-weight:300;"> — ${esc(v.org)}</span>
           </div>
-          <span style="font-size:0.75rem;color:#bbb;font-weight:300;">${dateRange(v.startDate, v.endDate, false, t)}</span>
+          <span style="font-size:0.75rem;color:#bbb;font-weight:300;">${dateRange(v.startDate, v.endDate, false, t, lang)}</span>
         </div>
         ${bulletsHtml(v.description)}
       </div>`).join('')}
@@ -1483,7 +1482,7 @@ function tplMinimal(cv, accent, font, t) {
       <div class="cv-item" style="margin-bottom:0.75rem;">
         <div style="font-weight:500;font-size:0.85rem;color:#222;">${p.url ? `<a href="${safeUrl(p.url)}" style="color:#222;text-decoration:none;border-bottom:1px solid #ddd;">${esc(p.title)}</a>` : esc(p.title)}</div>
         ${p.authors ? `<div style="font-size:0.8rem;color:#888;font-weight:300;">${esc(p.authors)}</div>` : ''}
-        <div style="font-size:0.75rem;color:#bbb;font-weight:300;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date)}` : ''}</div>
+        <div style="font-size:0.75rem;color:#bbb;font-weight:300;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date, lang)}` : ''}</div>
       </div>`).join('')}
     </div>` : '';
 
@@ -1574,7 +1573,7 @@ function tplAcademic(cv, accent, font, t) {
             <span style="font-weight:700;font-size:0.9rem;">${esc(e.role)}</span>,
             <span style="font-style:italic;font-size:0.88rem;">${esc(e.company)}</span>
           </div>
-          <span style="font-size:0.78rem;color:#777;font-family:${serifFont};">${dateRange(e.startDate, e.endDate, e.current, t)}</span>
+          <span style="font-size:0.78rem;color:#777;font-family:${serifFont};">${dateRange(e.startDate, e.endDate, e.current, t, lang)}</span>
         </div>
         ${bulletsHtml(e.bullets)}
       </div>`).join('')}
@@ -1590,7 +1589,7 @@ function tplAcademic(cv, accent, font, t) {
             <span style="font-weight:700;font-size:0.9rem;">${esc(e.degree)}${e.field ? `, ${esc(e.field)}` : ''}</span>
             <span style="font-style:italic;font-size:0.88rem;"> — ${esc(e.school)}</span>
           </div>
-          <span style="font-size:0.78rem;color:#777;font-family:${serifFont};">${dateRange(e.startDate, e.endDate, false, t)}</span>
+          <span style="font-size:0.78rem;color:#777;font-family:${serifFont};">${dateRange(e.startDate, e.endDate, false, t, lang)}</span>
         </div>
         ${e.grade ? `<div style="font-size:0.82rem;color:#555;font-family:${serifFont};font-style:italic;margin-top:0.15rem;">${esc(e.grade)}</div>` : ''}
       </div>`).join('')}
@@ -1602,7 +1601,7 @@ function tplAcademic(cv, accent, font, t) {
     <ol style="margin:0;padding-left:1.25rem;font-family:${serifFont};">
       ${cv.publications.map(p => `
         <li style="margin-bottom:0.6rem;font-size:0.85rem;line-height:1.6;">
-          ${p.authors ? `${esc(p.authors)}. ` : ''}<span style="font-style:italic;">${p.url ? `<a href="${safeUrl(p.url)}" style="color:${accent};text-decoration:none;">${esc(p.title)}</a>` : esc(p.title)}</span>.${p.venue ? ` ${esc(p.venue)}.` : ''}${p.date ? ` ${formatDate(p.date)}.` : ''}
+          ${p.authors ? `${esc(p.authors)}. ` : ''}<span style="font-style:italic;">${p.url ? `<a href="${safeUrl(p.url)}" style="color:${accent};text-decoration:none;">${esc(p.title)}</a>` : esc(p.title)}</span>.${p.venue ? ` ${esc(p.venue)}.` : ''}${p.date ? ` ${formatDate(p.date, lang)}.` : ''}
         </li>`).join('')}
     </ol>
     </div>` : '';
@@ -1624,7 +1623,7 @@ function tplAcademic(cv, accent, font, t) {
   const certBlock = cv.extras.certifications.length ? `
     <div data-section="certifications">
     ${sectionTitle(t('certifications') || 'Certifications')}
-    ${cv.extras.certifications.map(c => `<div style="font-family:${serifFont};font-size:0.85rem;margin-bottom:0.3rem;">${esc(c.name)}${c.issuer ? `, ${esc(c.issuer)}` : ''}${c.date ? ` (${formatDate(c.date)})` : ''}</div>`).join('')}
+    ${cv.extras.certifications.map(c => `<div style="font-family:${serifFont};font-size:0.85rem;margin-bottom:0.3rem;">${esc(c.name)}${c.issuer ? `, ${esc(c.issuer)}` : ''}${c.date ? ` (${formatDate(c.date, lang)})` : ''}</div>`).join('')}
     </div>` : '';
 
   const interestsBlock = cv.extras.interests ? `
@@ -1654,7 +1653,7 @@ function tplAcademic(cv, accent, font, t) {
             <span style="font-weight:700;font-size:0.9rem;">${esc(v.role)}</span>,
             <span style="font-style:italic;">${esc(v.org)}</span>
           </div>
-          <span style="font-size:0.78rem;color:#777;">${dateRange(v.startDate, v.endDate, false, t)}</span>
+          <span style="font-size:0.78rem;color:#777;">${dateRange(v.startDate, v.endDate, false, t, lang)}</span>
         </div>
         ${bulletsHtml(v.description)}
       </div>`).join('')}
@@ -1754,7 +1753,7 @@ function tplInfographic(cv, accent, font, t) {
           <div style="width:2px;flex:1;background:${accent}33;"></div>
         </div>
         <div style="flex:1;padding-bottom:0.5rem;">
-          <div style="font-size:0.72rem;color:#fff;background:${accent};padding:0.1rem 0.5rem;border-radius:10px;display:inline-block;margin-bottom:0.3rem;">${dateRange(e.startDate, e.endDate, e.current, t)}</div>
+          <div style="font-size:0.72rem;color:#fff;background:${accent};padding:0.1rem 0.5rem;border-radius:10px;display:inline-block;margin-bottom:0.3rem;">${dateRange(e.startDate, e.endDate, e.current, t, lang)}</div>
           <div style="font-weight:700;font-size:0.9rem;color:#222;">${esc(e.role)}</div>
           <div style="font-size:0.82rem;color:#666;">${esc(e.company)}</div>
           ${bulletsHtml(e.bullets)}
@@ -1772,7 +1771,7 @@ function tplInfographic(cv, accent, font, t) {
           <div style="width:2px;flex:1;background:${accent}33;"></div>
         </div>
         <div style="flex:1;">
-          <div style="font-size:0.72rem;color:#fff;background:${accent};padding:0.1rem 0.5rem;border-radius:10px;display:inline-block;margin-bottom:0.3rem;">${dateRange(e.startDate, e.endDate, false, t)}</div>
+          <div style="font-size:0.72rem;color:#fff;background:${accent};padding:0.1rem 0.5rem;border-radius:10px;display:inline-block;margin-bottom:0.3rem;">${dateRange(e.startDate, e.endDate, false, t, lang)}</div>
           <div style="font-weight:700;font-size:0.9rem;">${esc(e.degree)}${e.field ? ` — ${esc(e.field)}` : ''}</div>
           <div style="font-size:0.82rem;color:#666;">${esc(e.school)}</div>
           ${e.grade ? `<div style="font-size:0.78rem;color:#888;">${esc(e.grade)}</div>` : ''}
@@ -1826,7 +1825,7 @@ function tplInfographic(cv, accent, font, t) {
     ${cv.extras.certifications.map(c => `
       <div class="cv-item" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
         <div style="width:8px;height:8px;background:${accent};border-radius:50%;flex-shrink:0;"></div>
-        <span style="font-size:0.82rem;">${esc(c.name)}${c.issuer ? ` <span style="color:#777;">· ${esc(c.issuer)}</span>` : ''}${c.date ? ` <span style="color:#999;">(${formatDate(c.date)})</span>` : ''}</span>
+        <span style="font-size:0.82rem;">${esc(c.name)}${c.issuer ? ` <span style="color:#777;">· ${esc(c.issuer)}</span>` : ''}${c.date ? ` <span style="color:#999;">(${formatDate(c.date, lang)})</span>` : ''}</span>
       </div>`).join('')}
     </div>` : '';
 
@@ -1859,7 +1858,7 @@ function tplInfographic(cv, accent, font, t) {
         <div style="flex:1;">
           <div style="font-weight:700;font-size:0.9rem;">${esc(v.role)}</div>
           <div style="font-size:0.82rem;color:#666;">${esc(v.org)}</div>
-          <div style="font-size:0.72rem;color:#999;">${dateRange(v.startDate, v.endDate, false, t)}</div>
+          <div style="font-size:0.72rem;color:#999;">${dateRange(v.startDate, v.endDate, false, t, lang)}</div>
           ${bulletsHtml(v.description)}
         </div>
       </div>`).join('')}
@@ -1874,7 +1873,7 @@ function tplInfographic(cv, accent, font, t) {
         <div>
           <div style="font-weight:600;font-size:0.85rem;">${p.url ? `<a href="${safeUrl(p.url)}" style="color:${accent};text-decoration:none;">${esc(p.title)}</a>` : esc(p.title)}</div>
           ${p.authors ? `<div style="font-size:0.78rem;color:#555;">${esc(p.authors)}</div>` : ''}
-          <div style="font-size:0.75rem;color:#888;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date)}` : ''}</div>
+          <div style="font-size:0.75rem;color:#888;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date, lang)}` : ''}</div>
         </div>
       </div>`).join('')}
     </div>` : '';
@@ -1977,7 +1976,7 @@ function tplElegant(cv, accent, font, t) {
             <span style="font-family:${elegantFont};font-weight:700;font-size:0.92rem;color:#1a1a1a;">${esc(e.role)}</span>
             <span style="color:#999;font-size:0.82rem;font-weight:300;"> — ${esc(e.company)}</span>
           </div>
-          <span style="font-size:0.75rem;color:#aaa;font-style:italic;">${dateRange(e.startDate, e.endDate, e.current, t)}</span>
+          <span style="font-size:0.75rem;color:#aaa;font-style:italic;">${dateRange(e.startDate, e.endDate, e.current, t, lang)}</span>
         </div>
         ${bulletsHtml(e.bullets)}
       </div>`).join('')}
@@ -1993,7 +1992,7 @@ function tplElegant(cv, accent, font, t) {
             <span style="font-family:${elegantFont};font-weight:700;font-size:0.9rem;color:#1a1a1a;">${esc(e.degree)}${e.field ? ` — ${esc(e.field)}` : ''}</span>
             <span style="color:#999;font-size:0.82rem;font-weight:300;"> — ${esc(e.school)}</span>
           </div>
-          <span style="font-size:0.75rem;color:#aaa;font-style:italic;">${dateRange(e.startDate, e.endDate, false, t)}</span>
+          <span style="font-size:0.75rem;color:#aaa;font-style:italic;">${dateRange(e.startDate, e.endDate, false, t, lang)}</span>
         </div>
         ${e.grade ? `<div style="font-size:0.8rem;color:#777;font-style:italic;margin-top:0.15rem;">${esc(e.grade)}</div>` : ''}
       </div>`).join('')}
@@ -2021,7 +2020,7 @@ function tplElegant(cv, accent, font, t) {
     ${sectionTitle(t('certifications') || 'Certifications')}
     ${cv.extras.certifications.map(c => `
       <div class="cv-item" style="font-size:0.82rem;margin-bottom:0.35rem;text-align:center;">
-        <span style="font-family:${elegantFont};font-weight:600;">${esc(c.name)}</span>${c.issuer ? ` <span style="color:#999;">· ${esc(c.issuer)}</span>` : ''}${c.date ? ` <span style="color:#aaa;font-style:italic;">(${formatDate(c.date)})</span>` : ''}
+        <span style="font-family:${elegantFont};font-weight:600;">${esc(c.name)}</span>${c.issuer ? ` <span style="color:#999;">· ${esc(c.issuer)}</span>` : ''}${c.date ? ` <span style="color:#aaa;font-style:italic;">(${formatDate(c.date, lang)})</span>` : ''}
       </div>`).join('')}
     </div>` : '';
 
@@ -2052,7 +2051,7 @@ function tplElegant(cv, accent, font, t) {
             <span style="font-family:${elegantFont};font-weight:700;font-size:0.9rem;color:#1a1a1a;">${esc(v.role)}</span>
             <span style="color:#999;font-size:0.82rem;font-weight:300;"> — ${esc(v.org)}</span>
           </div>
-          <span style="font-size:0.75rem;color:#aaa;font-style:italic;">${dateRange(v.startDate, v.endDate, false, t)}</span>
+          <span style="font-size:0.75rem;color:#aaa;font-style:italic;">${dateRange(v.startDate, v.endDate, false, t, lang)}</span>
         </div>
         ${bulletsHtml(v.description)}
       </div>`).join('')}
@@ -2065,7 +2064,7 @@ function tplElegant(cv, accent, font, t) {
       <div class="cv-item" style="margin-bottom:0.75rem;">
         <div style="font-family:${elegantFont};font-weight:600;font-size:0.85rem;">${p.url ? `<a href="${safeUrl(p.url)}" style="color:${accent};text-decoration:none;">${esc(p.title)}</a>` : esc(p.title)}</div>
         ${p.authors ? `<div style="font-size:0.78rem;color:#777;font-style:italic;">${esc(p.authors)}</div>` : ''}
-        <div style="font-size:0.75rem;color:#aaa;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date)}` : ''}</div>
+        <div style="font-size:0.75rem;color:#aaa;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date, lang)}` : ''}</div>
       </div>`).join('')}
     </div>` : '';
 
@@ -2162,7 +2161,7 @@ function tplTwoPage(cv, accent, font, t) {
             <div style="font-weight:700;font-size:0.95rem;color:#111;">${esc(e.role)}</div>
             <div style="font-size:0.85rem;color:${accent};font-weight:500;">${esc(e.company)}</div>
           </div>
-          <div style="font-size:0.78rem;color:#888;background:#f5f5f5;padding:0.2rem 0.6rem;border-radius:3px;">${dateRange(e.startDate, e.endDate, e.current, t)}</div>
+          <div style="font-size:0.78rem;color:#888;background:#f5f5f5;padding:0.2rem 0.6rem;border-radius:3px;">${dateRange(e.startDate, e.endDate, e.current, t, lang)}</div>
         </div>
         ${bulletsHtml(e.bullets)}
       </div>`).join('')}
@@ -2178,7 +2177,7 @@ function tplTwoPage(cv, accent, font, t) {
             <div style="font-weight:700;font-size:0.95rem;color:#111;">${esc(e.degree)}${e.field ? ` — ${esc(e.field)}` : ''}</div>
             <div style="font-size:0.85rem;color:${accent};font-weight:500;">${esc(e.school)}</div>
           </div>
-          <div style="font-size:0.78rem;color:#888;background:#f5f5f5;padding:0.2rem 0.6rem;border-radius:3px;">${dateRange(e.startDate, e.endDate, false, t)}</div>
+          <div style="font-size:0.78rem;color:#888;background:#f5f5f5;padding:0.2rem 0.6rem;border-radius:3px;">${dateRange(e.startDate, e.endDate, false, t, lang)}</div>
         </div>
         ${e.grade ? `<div style="font-size:0.82rem;color:#666;margin-top:0.25rem;">${esc(e.grade)}</div>` : ''}
       </div>`).join('')}
@@ -2210,7 +2209,7 @@ function tplTwoPage(cv, accent, font, t) {
       <div class="cv-item" style="margin-bottom:0.6rem;padding-bottom:0.5rem;border-bottom:1px solid #f0f0f0;">
         <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;">
           <span style="font-size:0.88rem;font-weight:500;">${esc(c.name)}${c.issuer ? ` <span style="color:#777;font-weight:400;">· ${esc(c.issuer)}</span>` : ''}</span>
-          ${c.date ? `<span style="font-size:0.78rem;color:#999;">${formatDate(c.date)}</span>` : ''}
+          ${c.date ? `<span style="font-size:0.78rem;color:#999;">${formatDate(c.date, lang)}</span>` : ''}
         </div>
       </div>`).join('')}
     </div>` : '';
@@ -2242,7 +2241,7 @@ function tplTwoPage(cv, accent, font, t) {
             <div style="font-weight:700;font-size:0.95rem;color:#111;">${esc(v.role)}</div>
             <div style="font-size:0.85rem;color:${accent};font-weight:500;">${esc(v.org)}</div>
           </div>
-          <div style="font-size:0.78rem;color:#888;background:#f5f5f5;padding:0.2rem 0.6rem;border-radius:3px;">${dateRange(v.startDate, v.endDate, false, t)}</div>
+          <div style="font-size:0.78rem;color:#888;background:#f5f5f5;padding:0.2rem 0.6rem;border-radius:3px;">${dateRange(v.startDate, v.endDate, false, t, lang)}</div>
         </div>
         ${bulletsHtml(v.description)}
       </div>`).join('')}
@@ -2255,7 +2254,7 @@ function tplTwoPage(cv, accent, font, t) {
       <div class="cv-item" style="margin-bottom:0.9rem;padding-bottom:0.75rem;border-bottom:1px solid #f0f0f0;">
         <div style="font-weight:600;font-size:0.88rem;">${p.url ? `<a href="${safeUrl(p.url)}" style="color:${accent};text-decoration:none;">${esc(p.title)}</a>` : esc(p.title)}</div>
         ${p.authors ? `<div style="font-size:0.82rem;color:#555;margin-top:0.15rem;">${esc(p.authors)}</div>` : ''}
-        <div style="font-size:0.78rem;color:#888;margin-top:0.1rem;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date)}` : ''}</div>
+        <div style="font-size:0.78rem;color:#888;margin-top:0.1rem;">${p.venue ? esc(p.venue) : ''}${p.date ? ` · ${formatDate(p.date, lang)}` : ''}</div>
       </div>`).join('')}
     </div>` : '';
 
